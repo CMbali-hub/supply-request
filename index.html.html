@@ -268,7 +268,7 @@
   .field textarea::placeholder { color: #B0B4BF; }
 
   .field select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A7D8A' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A7D8A' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 42px;
@@ -320,7 +320,6 @@
     line-height: 1; border-radius: 6px; transition: background 0.15s;
   }
   .trolley-chip-clear:hover { background: #ddf0cc; }
-
 
 
 
@@ -474,6 +473,8 @@
   #screen-role    { display: block; }
   #screen-form    { display: none; }
   #screen-success { display: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -667,6 +668,8 @@
   let selectedUrgency = '';
   let currentStep     = 1;
 
+  const ORIGINAL_SCAN_BTN_HTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2v2h-2zM18 14h3M14 18h2M18 18h3v3M21 14v2"/></svg> Scan Trolley QR Code`;
+
   /* ── Role selection ── */
   function selectRole(role) {
     selectedRole = role;
@@ -701,7 +704,7 @@
       btn.style.background = '';
       btn.style.borderColor = '';
       btn.style.color = '';
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2v2h-2zM18 14h3M14 18h2M18 18h3v3M21 14v2"/></svg> Scan Trolley QR Code`;
+      btn.innerHTML = ORIGINAL_SCAN_BTN_HTML;
     }, 1800);
   }
   function confirmTrolley(val) {
@@ -714,7 +717,7 @@
     trolleyValue = '';
     document.getElementById('trolleyChip').classList.remove('show');
     document.getElementById('trolleyScanBtn').style.cssText = '';
-    document.getElementById('trolleyScanBtn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2v2h-2zM18 14h3M14 18h2M18 18h3v3M21 14v2"/></svg> Scan Trolley QR Code`;
+    document.getElementById('trolleyScanBtn').innerHTML = ORIGINAL_SCAN_BTN_HTML;
   }
 
   /* ── Urgency pills ── */
@@ -821,7 +824,7 @@
   async function submitRequest() {
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
-    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;display:inline-block"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Submitting…`;
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite;display:inline-block"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2" stroke-linecap="round"/></svg> Submitting...`;
 
     // Simulate API call delay
     await new Promise(r => setTimeout(r, 900));
@@ -851,15 +854,12 @@
     document.querySelectorAll('.field-error').forEach(e => e.classList.remove('show'));
     document.querySelectorAll('.invalid').forEach(e => e.classList.remove('invalid'));
     document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('trolleyScanBtn').innerHTML = ORIGINAL_SCAN_BTN_HTML;
+    document.getElementById('trolleyScanBtn').style.cssText = '';
     setStep(1);
     document.getElementById('submitBtn').disabled = false;
     document.getElementById('submitBtn').innerHTML = `Submit Request <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
   }
-
-  /* ── Spinner keyframe ── */
-  const style = document.createElement('style');
-  style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
-  document.head.appendChild(style);
 </script>
 </body>
 </html>
